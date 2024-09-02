@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+
 from core.models import PublishedModel
 
 LENGHT_STRING = 20
@@ -25,15 +26,15 @@ class Category(PublishedModel):
         help_text=('Идентификатор страницы для URL; разрешены '
                    'символы латиницы, цифры, дефис и подчёркивание.')
     )
-    is_published = models.BooleanField(
-        default=True,
-        verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
 
     class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._meta.get_field('is_published').help_text = \
+            'Снимите галочку, чтобы скрыть публикацию.'
 
     def __str__(self):
         return f'Категория: {self.title[:LENGHT_STRING]}'
